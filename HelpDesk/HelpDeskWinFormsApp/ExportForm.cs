@@ -22,9 +22,9 @@ namespace HelpDeskWinFormsApp
         {
             InitializeComponent();
 
-            this.provider = provider;
+            this.provider = provider;  //this.provider = provider удалил лишнюю строку
             this.isSupport = isSupport;
-            this.provider = provider;
+
         }
 
         private void ExportForm_Shown(object sender, EventArgs e)
@@ -58,10 +58,10 @@ namespace HelpDeskWinFormsApp
                 return;
             }
 
-            var allTrubleTickets = provider.GetAllTrubleTickets();
-            var trubleTickets = new List<TrubleTicket>();
+            var allTrubleTickets = provider.GetAllTroubleTickets();
+            var trubleTickets = new List<TroubleTicket>();
 
-            foreach ( var tt in allTrubleTickets)
+            foreach (var tt in allTrubleTickets)
             {
                 if (tt.Created >= startDateTimePicker.Value && tt.Created <= endDateTimePicker.Value)
                 {
@@ -76,11 +76,12 @@ namespace HelpDeskWinFormsApp
             {
                 if (statusFilterCheckBox.Checked)
                 {
-                    var tempTrubleTickets = new List<TrubleTicket>();
+                    var tempTrubleTickets = new List<TroubleTicket>();
 
-                    foreach( var tt in trubleTickets)
+                    foreach (var tt in trubleTickets)
                     {
-                        if (tt.Status == statusFilterComboBox.Text)
+                        var status = Enum.GetValues<TicketStatus>().FirstOrDefault(s => s.GetDescription() == statusFilterComboBox.Text);
+                        if (tt.Status == status)
                         {
                             tempTrubleTickets.Add(tt);
                         }
@@ -148,7 +149,7 @@ namespace HelpDeskWinFormsApp
             }
         }
 
-        private void CsvTrubleTicketExport(List<TrubleTicket> result, List<User> users, string exportFile)
+        private void CsvTrubleTicketExport(List<TroubleTicket> result, List<User> users, string exportFile)
         {
             var rowsCount = result.Count;
 
@@ -177,7 +178,7 @@ namespace HelpDeskWinFormsApp
 
                     sw.Write("\"" + result[i].Id + "\";");
                     sw.Write(result[i].IsSolved == true ? "\"Да\";" : "\"Нет\";");
-                    sw.Write("\"" + result[i].Status + "\";");
+                    sw.Write("\"" + result[i].Status.GetDescription() + "\";");
                     sw.Write("\"" + result[i].Text.Trim('\r').Trim('\n') + "\";");
                     sw.Write("\"" + result[i].Resolve + "\";");
                     sw.Write(resolveUser == null ? "\"\";" : "\"" + resolveUser.Name + "\";");
@@ -305,7 +306,7 @@ namespace HelpDeskWinFormsApp
             workBook.SaveAs(exportFile);
         }
 
-        private void ExcelTrubleTicketExport(List<TrubleTicket> result, List<User> users, string exportFile)
+        private void ExcelTrubleTicketExport(List<TroubleTicket> result, List<User> users, string exportFile)
         {
             var rowsCount = result.Count;
 
@@ -336,7 +337,7 @@ namespace HelpDeskWinFormsApp
 
                 sheet.Cell(i + 2, 1).SetValue(result[i].Id);
                 sheet.Cell(i + 2, 2).SetValue(result[i].IsSolved == true ? "Да" : "Нет");
-                sheet.Cell(i + 2, 3).SetValue(result[i].Status);
+                sheet.Cell(i + 2, 3).SetValue(result[i].Status.GetDescription());
                 sheet.Cell(i + 2, 4).SetValue(result[i].Text);
                 sheet.Cell(i + 2, 5).SetValue(result[i].Resolve);
                 sheet.Cell(i + 2, 6).SetValue(resolveUser == null ? string.Empty : resolveUser.Name);
@@ -359,7 +360,7 @@ namespace HelpDeskWinFormsApp
                 endDateTimePicker.Enabled = true;
 
                 statusFilter.Clear();
-                statusFilter.AddRange(new List<string>() { "Зарегистрирована", "В работе", "Выполнена", "Отклонена" });
+                statusFilter.AddRange(Enum.GetValues<TicketStatus>().Select(s => s.GetDescription()).ToList()); // описание через атрибут
                 statusFilterComboBox.DataSource = null;
                 statusFilterComboBox.DataSource = statusFilter;
             }
@@ -398,7 +399,7 @@ namespace HelpDeskWinFormsApp
         {
             if (exportFileDialogResult == DialogResult.OK && successfullyExport)
             {
-                MessageBox.Show("Данные успешно экспотированы", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Данные успешно экспортированы", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);  // исправил опечатку  "Данные успешно экспотированы" в "Данные успешно экспортированы" 
                 return;
             }
 

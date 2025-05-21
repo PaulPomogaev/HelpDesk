@@ -1,28 +1,29 @@
-﻿using HelpDesk.Common;
+﻿using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using HelpDesk.Common;
 using HelpDesk.Common.Models;
 using System;
 using System.Windows.Forms;
 
 namespace HelpDeskWinFormsApp
 {
-    public partial class AuthorizationFrom : Form
+    public partial class AuthorizationForm : Form
     {
         public bool RegistrationChoice = false;
         private readonly IProvider provider;
 
-        public AuthorizationFrom(IProvider provider)
+        public AuthorizationForm(IProvider provider)
         {
             InitializeComponent();
             this.provider = provider;
         }
 
-        private void AuthorizationFrom_Shown(object sender, EventArgs e)
+        private void AuthorizationForm_Shown(object sender, EventArgs e) // опечатка AuthorizationFrom_Shown
         {
             AddFirstEmployee();
             UnlockTextBox();
         }
 
-        private void AuthorizationFrom_FormClosing(object sender, FormClosingEventArgs e)
+        private void AuthorizationForm_FormClosing(object sender, FormClosingEventArgs e)  // опечатка AuthorizationForm_FormClosing нужно Formm
         {
             if (DialogResult == DialogResult.Cancel)
             {
@@ -77,3 +78,4 @@ namespace HelpDeskWinFormsApp
         }
     }
 }
+

@@ -5,12 +5,12 @@ namespace HelpDesk.Common
 {
     public static class FileProvider
     {
-        public static bool Exist(string fileName)
+        public static bool Exists(string fileName)  // переназвал Exists в Exists
         {
             return File.Exists(fileName);
         }
 
-        public static void Put(string fileName, string text)
+        public static void WriteTextIntoFile(string fileName, string text)
         {
             using (var writer = new StreamWriter(fileName, false, Encoding.UTF8))
             {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using HelpDesk.Common;
 using HelpDesk.Common.Application;
@@ -115,30 +114,30 @@ namespace HelpDeskWinFormsApp
             {
                 var ticketId = Convert.ToInt32(listTTDataGridView.SelectedCells[0].Value);
 
-                var resolvedUser = Convert.ToInt32(provider.GetTrubleTicket(ticketId).ResolveUser != null ? user.Id : -1);
+                var resolvedUser = Convert.ToInt32(provider.GetTroubleTicket(ticketId).ResolveUser != null ? user.Id : -1);
 
                 if (user.IsEmployee && resolvedUser == -1)
                 {
                     resolvedUser = user.Id;
                 }
 
-                var dialogResult = new TrubleTicketForm(ticketId, user.IsEmployee, resolvedUser, provider).ShowDialog();
+                var dialogResult = new TroubleTicketForm(ticketId, user.IsEmployee, resolvedUser, provider).ShowDialog();
 
                 if (dialogResult == DialogResult.OK)
                 {
-                    RefreshTrubleTicketsDataGrid();
+                    RefreshTroubleTicketsDataGrid();
                 }
             }
         }
 
-        private void AddTrubleTicketbutton_Click(object sender, EventArgs e)
+        private void AddTroubleTicketbutton_Click(object sender, EventArgs e)
         {
-            var dialogResult = new AddTrubleTicketForm(user, provider);
+            var dialogResult = new AddTroubleTicketForm(user, provider);
 
             if (dialogResult.ShowDialog() == DialogResult.OK)
             {
                 treeView.SelectedNode = treeView.Nodes["trubleTicketlist"].Nodes["openTrubleTicket"];
-                RefreshTrubleTicketsDataGrid();
+                RefreshTroubleTicketsDataGrid();
             }
         }
 
@@ -196,7 +195,7 @@ namespace HelpDeskWinFormsApp
             {
                 if (treeView.SelectedNode.Parent.Name == "trubleTicketlist" || treeView.SelectedNode.Parent.Name == "statusTrubleTicketNode")
                 {
-                    RefreshTrubleTicketsDataGrid();
+                    RefreshTroubleTicketsDataGrid();
                     editUserButton.Enabled = false;
                     openTrubleTicketButton.Enabled = true;
                 }
@@ -272,7 +271,7 @@ namespace HelpDeskWinFormsApp
         {
             var isNeedRegistration = false;
             var login = string.Empty;
-            var authorizationFrom = new AuthorizationFrom(provider);
+            var authorizationFrom = new AuthorizationForm(provider);
 
             if (authorizationFrom.ShowDialog() == DialogResult.OK)
             {
@@ -333,7 +332,7 @@ namespace HelpDeskWinFormsApp
             }
         }
 
-        private void RefreshTrubleTicketsDataGrid()
+        private void RefreshTroubleTicketsDataGrid()
         {
             var selectedNode = treeView.SelectedNode.Name;
 
@@ -342,17 +341,17 @@ namespace HelpDeskWinFormsApp
                 return;
             }
 
-            List<TrubleTicket> trubleTickets = new();
+            List<TroubleTicket> trubleTickets = new();
 
             listTTDataGridView.Columns.Clear();
 
             if (user.IsEmployee)
             {
-                trubleTickets = provider.GetAllTrubleTickets();
+                trubleTickets = provider.GetAllTroubleTickets();
             }
             else
             {
-                trubleTickets = provider.GetAllTrubleTickets().Where(t => t.CreateUser == user.Id).ToList();
+                trubleTickets = provider.GetAllTroubleTickets().Where(t => t.CreateUser == user.Id).ToList();
             }
 
             switch (selectedNode)
@@ -370,16 +369,16 @@ namespace HelpDeskWinFormsApp
                     FillTrubleTicketsDataGreedView(trubleTickets.Where(s => (DateTime.Now - s.Deadline).TotalSeconds > 0).ToList());
                     break;
                 case "registeredTrubleTicketNode":
-                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == "Зарегистрирована").ToList());
+                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == TicketStatus.Зарегистрирована).ToList());
                     break;
                 case "workTrubleTicketNode":
-                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == "В работе").ToList());
+                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == TicketStatus.Выполняется).ToList());
                     break;
                 case "completedTrubleTicketNode":
-                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == "Выполнена").ToList());
+                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == TicketStatus.Выполнена).ToList());
                     break;
                 case "rejectedTrubleTicketNode":
-                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == "Отклонена").ToList());
+                    FillTrubleTicketsDataGreedView(trubleTickets.Where(s => s.Status == TicketStatus.Отклонена).ToList());
                     break;
                 default:
                     break;
@@ -427,7 +426,7 @@ namespace HelpDeskWinFormsApp
             listTTDataGridView.ClearSelection();
         }
 
-        private void FillTrubleTicketsDataGreedView(List<TrubleTicket> allTrubleTickets)
+        private void FillTrubleTicketsDataGreedView(List<TroubleTicket> allTrubleTickets)
         {
             AddColumnsTrubleTicketsDataGreedView();
 
@@ -448,7 +447,7 @@ namespace HelpDeskWinFormsApp
                 if (allTrubleTickets[i].IsSolved)
                 {
                     listTTDataGridView.Rows[i].Cells[1].Value = "Да";
-                    listTTDataGridView.Rows[i].DefaultCellStyle.BackColor = allTrubleTickets[i].Status == "Выполнена" ? Color.LightGreen : Color.LightGray;
+                    listTTDataGridView.Rows[i].DefaultCellStyle.BackColor = allTrubleTickets[i].Status == TicketStatus.Выполнена ? Color.LightGreen : Color.LightGray;
                 }
                 else
                 {
@@ -459,13 +458,13 @@ namespace HelpDeskWinFormsApp
                         listTTDataGridView.Rows[i].DefaultCellStyle.BackColor = Color.LightSalmon;
                     }
 
-                    if (allTrubleTickets[i].Status == "В работе")
+                    if (allTrubleTickets[i].Status == TicketStatus.Выполняется)
                     {
                         listTTDataGridView.Rows[i].DefaultCellStyle.BackColor = Color.LightYellow;
                     }
                 }
 
-                listTTDataGridView.Rows[i].Cells[2].Value = allTrubleTickets[i].Status;
+                listTTDataGridView.Rows[i].Cells[2].Value = allTrubleTickets[i].Status.GetDescription();
 
                 if (allTrubleTickets[i].Text.Length > 50)
                 {
