@@ -10,4 +10,4 @@ public static class EnumExtensions
         var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
         return attribute?.Description ?? value.ToString();
     }
-}   // добавил класс, метод ищет статус по описанию
+}   // получает строку из enum

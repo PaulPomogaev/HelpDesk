@@ -203,7 +203,7 @@
             this.addTrubleTicketbutton.TabIndex = 3;
             this.addTrubleTicketbutton.Text = "&Создать заявку";
             this.addTrubleTicketbutton.UseVisualStyleBackColor = true;
-            this.addTrubleTicketbutton.Click += new System.EventHandler(this.AddTrubleTicketbutton_Click);
+            this.addTrubleTicketbutton.Click += new System.EventHandler(this.AddTroubleTicketbutton_Click);
             // 
             // openTrubleTicketButton
             // 

@@ -1,6 +1,5 @@
 ﻿using HelpDesk.Common;
 using HelpDesk.Common.Models;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace HelpDeskWinFormsApp

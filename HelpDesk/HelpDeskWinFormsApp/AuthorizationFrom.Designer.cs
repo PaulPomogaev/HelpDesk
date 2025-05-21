@@ -157,8 +157,8 @@ namespace HelpDeskWinFormsApp
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "HelpDesk Авторизация";
-            FormClosing += AuthorizationFrom_FormClosing;
-            Shown += AuthorizationFrom_Shown;
+            FormClosing += AuthorizationForm_FormClosing;
+            Shown += AuthorizationForm_Shown;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);

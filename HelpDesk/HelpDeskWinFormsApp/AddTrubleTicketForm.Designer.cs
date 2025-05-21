@@ -1,6 +1,6 @@
 ﻿namespace HelpDeskWinFormsApp
 {
-    partial class AddTrubleTicketForm
+    partial class AddTroubleTicketForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,8 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.userNameTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.trubleRichTextBox = new System.Windows.Forms.RichTextBox();
-            this.createTrubleTicketButton = new System.Windows.Forms.Button();
+            this.troubleRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.createTroubleTicketButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -64,25 +64,25 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Опишите вашу проблему";
             // 
-            // trubleRichTextBox
+            // troubleRichTextBox
             // 
-            this.trubleRichTextBox.Location = new System.Drawing.Point(12, 75);
-            this.trubleRichTextBox.Name = "trubleRichTextBox";
-            this.trubleRichTextBox.Size = new System.Drawing.Size(378, 241);
-            this.trubleRichTextBox.TabIndex = 3;
-            this.trubleRichTextBox.Text = "";
-            this.trubleRichTextBox.TextChanged += new System.EventHandler(this.TrubleRichTextBox_TextChanged);
+            this.troubleRichTextBox.Location = new System.Drawing.Point(12, 75);
+            this.troubleRichTextBox.Name = "troubleRichTextBox";
+            this.troubleRichTextBox.Size = new System.Drawing.Size(378, 241);
+            this.troubleRichTextBox.TabIndex = 3;
+            this.troubleRichTextBox.Text = "";
+            this.troubleRichTextBox.TextChanged += new System.EventHandler(this.TroubleRichTextBox_TextChanged);
             // 
-            // createTrubleTicketButton
+            // createTroubleTicketButton
             // 
-            this.createTrubleTicketButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.createTrubleTicketButton.Enabled = false;
-            this.createTrubleTicketButton.Location = new System.Drawing.Point(12, 322);
-            this.createTrubleTicketButton.Name = "createTrubleTicketButton";
-            this.createTrubleTicketButton.Size = new System.Drawing.Size(378, 34);
-            this.createTrubleTicketButton.TabIndex = 4;
-            this.createTrubleTicketButton.Text = "&Создать заявку";
-            this.createTrubleTicketButton.UseVisualStyleBackColor = true;
+            this.createTroubleTicketButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.createTroubleTicketButton.Enabled = false;
+            this.createTroubleTicketButton.Location = new System.Drawing.Point(12, 322);
+            this.createTroubleTicketButton.Name = "createTroubleTicketButton";
+            this.createTroubleTicketButton.Size = new System.Drawing.Size(378, 34);
+            this.createTroubleTicketButton.TabIndex = 4;
+            this.createTroubleTicketButton.Text = "&Создать заявку";
+            this.createTroubleTicketButton.UseVisualStyleBackColor = true;
             // 
             // cancelButton
             // 
@@ -94,26 +94,26 @@
             this.cancelButton.Text = "&Отмена";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
-            // AddTrubleTicketForm
+            // AddTroubleTicketForm
             // 
-            this.AcceptButton = this.createTrubleTicketButton;
+            this.AcceptButton = this.createTroubleTicketButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(402, 404);
             this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.createTrubleTicketButton);
-            this.Controls.Add(this.trubleRichTextBox);
+            this.Controls.Add(this.createTroubleTicketButton);
+            this.Controls.Add(this.troubleRichTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.userNameTextBox);
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AddTrubleTicketForm";
+            this.Name = "AddTroubleTicketForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "HelpDesk Создание заявки";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AddTrubleTicketForm_FormClosing);
-            this.Shown += new System.EventHandler(this.AddTrubleTicketForm_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AddTroubleTicketForm_FormClosing);
+            this.Shown += new System.EventHandler(this.AddTroubleTicketForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -124,8 +124,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox userNameTextBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RichTextBox trubleRichTextBox;
-        private System.Windows.Forms.Button createTrubleTicketButton;
+        private System.Windows.Forms.RichTextBox troubleRichTextBox;
+        private System.Windows.Forms.Button createTroubleTicketButton;
         private System.Windows.Forms.Button cancelButton;
     }
 }

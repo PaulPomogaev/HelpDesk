@@ -271,7 +271,7 @@ namespace HelpDeskWinFormsApp
         {
             var isNeedRegistration = false;
             var login = string.Empty;
-            var authorizationFrom = new AuthorizationForm(provider);
+            var authorizationFrom = new AuthorizationFrom(provider);
 
             if (authorizationFrom.ShowDialog() == DialogResult.OK)
             {

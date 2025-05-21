@@ -6,24 +6,24 @@ using System.Windows.Forms;
 
 namespace HelpDeskWinFormsApp
 {
-    public partial class AuthorizationForm : Form
+    public partial class AuthorizationFrom : Form
     {
         public bool RegistrationChoice = false;
         private readonly IProvider provider;
 
-        public AuthorizationForm(IProvider provider)
+        public AuthorizationFrom(IProvider provider)
         {
             InitializeComponent();
             this.provider = provider;
         }
 
-        private void AuthorizationForm_Shown(object sender, EventArgs e) // опечатка AuthorizationFrom_Shown
+        private void AuthorizationForm_Shown(object sender, EventArgs e) 
         {
             AddFirstEmployee();
             UnlockTextBox();
         }
 
-        private void AuthorizationForm_FormClosing(object sender, FormClosingEventArgs e)  // опечатка AuthorizationForm_FormClosing нужно Formm
+        private void AuthorizationForm_FormClosing(object sender, FormClosingEventArgs e)  
         {
             if (DialogResult == DialogResult.Cancel)
             {

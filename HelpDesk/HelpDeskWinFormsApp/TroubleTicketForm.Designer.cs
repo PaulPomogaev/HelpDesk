@@ -1,6 +1,6 @@
 ﻿namespace HelpDeskWinFormsApp
 {
-    partial class TrubleTicketForm
+    partial class TroubleTicketForm
     {
         /// <summary>
         /// Required designer variable.
@@ -162,7 +162,7 @@
             this.Name = "TrubleTicketForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TrubleTicketForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrubleTicketForm_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TroubleTicketForm_FormClosing);
             this.Shown += new System.EventHandler(this.TrubleTicketForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

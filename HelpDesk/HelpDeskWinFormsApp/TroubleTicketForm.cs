@@ -25,24 +25,24 @@ namespace HelpDeskWinFormsApp
             this.provider = provider;
         }
 
-        private void TroubleTicketForm_Shown(object sender, System.EventArgs e)
+        private void TrubleTicketForm_Shown(object sender, System.EventArgs e)
         {
             troubleTicket = provider.GetTroubleTicket(ticketId);
             userCreate = provider.GetUser(troubleTicket.CreateUser);
             lastStatus = troubleTicket.Status;
-            statusTroubleTicketComboBox.DataSource = Enum.GetValues<TicketStatus>().Select(s => s.GetDescription()).ToList();
-            statusTroubleTicketComboBox.SelectedItem = troubleTicket.Status;
+            statusTrubleTicketComboBox.DataSource = Enum.GetValues<TicketStatus>().Select(s => s.GetDescription()).ToList();
+            statusTrubleTicketComboBox.SelectedItem = troubleTicket.Status;
 
             Text = $"HelpDesk. Заявка №{troubleTicket.Id}";  // исправил опечатку в слове Заявка
             userCreateTextBox.Text = $"{userCreate.Name} \\ {userCreate.Email}";
-            troubleTicketRichTextBox.Text = troubleTicket.Text;
+            trubleTicketRichTextBox.Text = troubleTicket.Text;
 
             if (troubleTicket.Resolve != null)
             {
                 resolveRichTextBox.Text = $"Заявка решена {troubleTicket.ResolveTime}\n\r";
                 resolveRichTextBox.Text += troubleTicket.Resolve;
                 resolveRichTextBox.ReadOnly = true;
-                statusTroubleTicketComboBox.Enabled = false;
+                statusTrubleTicketComboBox.Enabled = false;
                 saveButton.Enabled = false;
             }
 
@@ -50,7 +50,7 @@ namespace HelpDeskWinFormsApp
             {
                 saveButton.Visible = false;
                 resolveRichTextBox.Enabled = false;
-                statusTroubleTicketComboBox.Enabled = false;
+                statusTrubleTicketComboBox.Enabled = false;
             }
         }
 
@@ -58,10 +58,22 @@ namespace HelpDeskWinFormsApp
         {
             if (DialogResult == DialogResult.OK)
             {
-                if (statusTroubleTicketComboBox.SelectedItem is not TicketStatus selectedStatus)
+
+                var selectedItem = statusTrubleTicketComboBox.SelectedItem?.ToString();
+
+                if (string.IsNullOrEmpty(selectedItem))
                 {
                     e.Cancel = true;
-                    MessageBox.Show("Выберите корректный статус заявки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Выберите статус заявки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var selectedStatus = StatusHelper.FromDescription(selectedItem);
+
+                if (!selectedStatus.HasValue)
+                {
+                    e.Cancel = true;
+                    MessageBox.Show("Некорректный статус заявки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -80,20 +92,19 @@ namespace HelpDeskWinFormsApp
                     return;
                 }
 
-                if (selectedStatus == TicketStatus.Выполнена || selectedStatus == TicketStatus.Отклонена) // время изменения решения только при смене статуса на Выполнена или Отклонена
+                if (selectedStatus == TicketStatus.Выполнена || selectedStatus == TicketStatus.Отклонена)
                 {
                     troubleTicket.ResolveTime = DateTime.Now;
                 }
 
                 if (selectedStatus == TicketStatus.Выполнена || selectedStatus == TicketStatus.Отклонена)
                 {
-                    provider.ResolveTroubleTicket(troubleTicket.Id, selectedStatus, resolveRichTextBox.Text, resolveUserId);
+                    provider.ResolveTroubleTicket(troubleTicket.Id, selectedStatus.Value, resolveRichTextBox.Text, resolveUserId);
                 }
                 else if (selectedStatus != lastStatus)
                 {
-                    provider.ChangeStatusTroubleTicket(troubleTicket.Id, selectedStatus, resolveUserId);
+                    provider.ChangeStatusTroubleTicket(troubleTicket.Id, selectedStatus.Value, resolveUserId);
                 }
-
             }
         }
     }
