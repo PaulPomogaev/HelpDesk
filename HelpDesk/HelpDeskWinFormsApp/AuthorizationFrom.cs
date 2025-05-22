@@ -23,14 +23,24 @@ namespace HelpDeskWinFormsApp
             UnlockTextBox();
         }
 
-        private void AuthorizationForm_FormClosing(object sender, FormClosingEventArgs e)  
+        private void AuthorizationForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (DialogResult == DialogResult.Cancel)
             {
                 return;
             }
 
-            if (!provider.IsCorrectLoginPassword(LoginTextBox.Text, PasswordTextBox.Text))
+            string login = LoginTextBox.Text.Trim();
+            string password = PasswordTextBox.Text.Trim();
+
+            if (!Validator.AreAllFieldsFilled(login, password))
+            {
+                e.Cancel = true;
+                MessageBox.Show("Логин и пароль обязательны для входа", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!provider.IsCorrectLoginPassword(login, password))
             {
                 e.Cancel = true;
                 MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

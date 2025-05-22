@@ -60,15 +60,58 @@ namespace HelpDeskWinFormsApp
 
         private void EditUserForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            user.Name = nameTextBox.Text;
-            user.Login = loginTextBox.Text;
-
-            if (changePasswordTextBox.Text != string.Empty)
+            if (DialogResult == DialogResult.Cancel)
             {
-                user.Password = Methods.GetHashMD5(changePasswordTextBox.Text);
+                return;
             }
 
-            user.Email = emailTextBox.Text;
+            string name = nameTextBox.Text.Trim();
+            string login = loginTextBox.Text.Trim();
+            string email = emailTextBox.Text.Trim();
+            string newPassword = changePasswordTextBox.Text.Trim();
+
+            if (!Validator.AreAllFieldsFilled(name, login, email))
+            {
+                e.Cancel = true;
+                MessageBox.Show("Имя, логин и email должны быть заполнены", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!Validator.IsEmailValid(email))
+            {
+                e.Cancel = true;
+                MessageBox.Show("Некорректный email", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(newPassword) && !Validator.IsPasswordValid(newPassword))
+            {
+                e.Cancel = true;
+                MessageBox.Show("Пароль должен содержать минимум 6 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (userTypeComboBox.Text == "Сотрудник")
+            {
+                string department = deparmentComboBox.Text?.Trim();
+                string function = functionComboBox.Text?.Trim();
+
+                if (!Validator.AreAllFieldsFilled(department, function))
+                {
+                    e.Cancel = true;
+                    MessageBox.Show("Должность и отдел обязательны для сотрудника", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            user.Name = name;
+            user.Login = login;
+            user.Email = email;
+
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                user.Password = Methods.GetHashMD5(newPassword);
+            }
 
             if (user.IsEmployee)
             {
