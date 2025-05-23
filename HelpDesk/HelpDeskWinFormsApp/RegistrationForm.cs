@@ -6,9 +6,9 @@ namespace HelpDeskWinFormsApp
 {
     public partial class RegistrationForm : Form
     {
-        private readonly IProvider provider;
+        private readonly IHelpDeskService provider;
 
-        public RegistrationForm(IProvider provider)
+        public RegistrationForm(IHelpDeskService provider)
         {
             InitializeComponent();
 

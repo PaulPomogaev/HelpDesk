@@ -9,9 +9,9 @@ namespace HelpDeskWinFormsApp
     public partial class AuthorizationFrom : Form
     {
         public bool RegistrationChoice = false;
-        private readonly IProvider provider;
+        private readonly IHelpDeskService provider;
 
-        public AuthorizationFrom(IProvider provider)
+        public AuthorizationFrom(IHelpDeskService provider)
         {
             InitializeComponent();
             this.provider = provider;
@@ -30,7 +30,7 @@ namespace HelpDeskWinFormsApp
                 return;
             }
 
-            if (!provider.IsCorrectLoginPassword(LoginTextBox.Text, PasswordTextBox.Text))
+            if (!provider.ValidateCredentials(LoginTextBox.Text, PasswordTextBox.Text))
             {
                 e.Cancel = true;
                 MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

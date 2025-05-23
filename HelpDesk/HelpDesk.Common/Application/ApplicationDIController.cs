@@ -12,7 +12,7 @@ namespace HelpDesk.Common.Application
         private void RegisterSystems()
         {          
             SystemManager.Register(this);            
-            SystemManager.Register<IProvider>(() => new JsonStorage());
+            SystemManager.Register<IHelpDeskService>(() => new JsonStorage());
         }
     }
 }

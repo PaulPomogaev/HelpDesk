@@ -10,7 +10,7 @@ namespace HelpDesk.Common
             return File.Exists(fileName);
         }
 
-        public static void WriteTextIntoFile(string fileName, string text)
+        public static void Write(string fileName, string text)
         {
             using (var writer = new StreamWriter(fileName, false, Encoding.UTF8))
             {

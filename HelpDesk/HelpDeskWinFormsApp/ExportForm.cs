@@ -16,9 +16,9 @@ namespace HelpDeskWinFormsApp
         private bool successfullyExport = false;
         private DialogResult exportFileDialogResult = DialogResult.Cancel;
         private bool isSupport = false;
-        private readonly IProvider provider;
+        private readonly IHelpDeskService provider;
 
-        public ExportForm(bool isSupport, IProvider provider)
+        public ExportForm(bool isSupport, IHelpDeskService provider)
         {
             InitializeComponent();
 
@@ -58,7 +58,7 @@ namespace HelpDeskWinFormsApp
                 return;
             }
 
-            var allTrubleTickets = provider.GetAllTroubleTickets();
+            var allTrubleTickets = provider.GetAllTickets();
             var trubleTickets = new List<TroubleTicket>();
 
             foreach (var tt in allTrubleTickets)
