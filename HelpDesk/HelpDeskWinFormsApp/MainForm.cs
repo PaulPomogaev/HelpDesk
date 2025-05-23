@@ -13,7 +13,7 @@ namespace HelpDeskWinFormsApp
     public partial class MainForm : Form
     {
         private User user = new();
-        private IProvider provider;
+        private IHelpDeskService provider;
 
         public MainForm(ApplicationDIController controller)
         {
@@ -33,7 +33,7 @@ namespace HelpDeskWinFormsApp
 
             if (login != string.Empty)
             {
-                user = provider.GetUser(login);
+                user = provider.GetUserByLogin(login);
 
                 ShowUserTreeNode();
                 SetHeaderWindowText();
@@ -78,7 +78,7 @@ namespace HelpDeskWinFormsApp
 
             if (login != string.Empty)
             {
-                user = provider.GetUser(login);
+                user = provider.GetUserByLogin(login);
 
                 SetHeaderWindowText();
 
@@ -114,7 +114,7 @@ namespace HelpDeskWinFormsApp
             {
                 var ticketId = Convert.ToInt32(listTTDataGridView.SelectedCells[0].Value);
 
-                var resolvedUser = Convert.ToInt32(provider.GetTroubleTicket(ticketId).ResolveUser != null ? user.Id : -1);
+                var resolvedUser = Convert.ToInt32(provider.GetTicketById(ticketId).ResolveUser != null ? user.Id : -1);
 
                 if (user.IsEmployee && resolvedUser == -1)
                 {
@@ -347,11 +347,11 @@ namespace HelpDeskWinFormsApp
 
             if (user.IsEmployee)
             {
-                trubleTickets = provider.GetAllTroubleTickets();
+                trubleTickets = provider.GetAllTickets();
             }
             else
             {
-                trubleTickets = provider.GetAllTroubleTickets().Where(t => t.CreateUser == user.Id).ToList();
+                trubleTickets = provider.GetAllTickets().Where(t => t.CreateUser == user.Id).ToList();
             }
 
             switch (selectedNode)

@@ -8,9 +8,9 @@ namespace HelpDeskWinFormsApp
     public partial class AddTroubleTicketForm : Form
     {
         User user;
-        private readonly IProvider provider;
+        private readonly IHelpDeskService provider;
 
-        public AddTroubleTicketForm(User user, IProvider provider)
+        public AddTroubleTicketForm(User user, IHelpDeskService provider)
         {
             InitializeComponent();
 
@@ -36,7 +36,7 @@ namespace HelpDeskWinFormsApp
                     Deadline = DateTime.Now.AddDays(4)
                 };
 
-                provider.AddTrubleTicket(trubelTicket);
+                provider.AddTicket(trubelTicket);
             }
         }
 

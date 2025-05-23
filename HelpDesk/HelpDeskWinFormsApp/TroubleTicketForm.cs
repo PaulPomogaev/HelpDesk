@@ -14,9 +14,9 @@ namespace HelpDeskWinFormsApp
         bool isEmployee;
         int resolveUserId;
         TicketStatus lastStatus;
-        private readonly IProvider provider;
+        private readonly IHelpDeskService provider;
 
-        public TroubleTicketForm(int ticketId, bool isEmployee, int resolveUserId, IProvider provider)
+        public TroubleTicketForm(int ticketId, bool isEmployee, int resolveUserId, IHelpDeskService provider)
         {
             InitializeComponent();
             this.ticketId = ticketId;
@@ -27,8 +27,8 @@ namespace HelpDeskWinFormsApp
 
         private void TrubleTicketForm_Shown(object sender, System.EventArgs e)
         {
-            troubleTicket = provider.GetTroubleTicket(ticketId);
-            userCreate = provider.GetUser(troubleTicket.CreateUser);
+            troubleTicket = provider.GetTicketById(ticketId);
+            userCreate = provider.GetUserById(troubleTicket.CreateUser);
             lastStatus = troubleTicket.Status;
             statusTrubleTicketComboBox.DataSource = Enum.GetValues<TicketStatus>().Select(s => s.GetDescription()).ToList();
             statusTrubleTicketComboBox.SelectedItem = troubleTicket.Status;
@@ -99,11 +99,11 @@ namespace HelpDeskWinFormsApp
 
                 if (selectedStatus == TicketStatus.Выполнена || selectedStatus == TicketStatus.Отклонена)
                 {
-                    provider.ResolveTroubleTicket(troubleTicket.Id, selectedStatus.Value, resolveRichTextBox.Text, resolveUserId);
+                    provider.ResolveTicket(troubleTicket.Id, selectedStatus.Value, resolveRichTextBox.Text, resolveUserId);
                 }
                 else if (selectedStatus != lastStatus)
                 {
-                    provider.ChangeStatusTroubleTicket(troubleTicket.Id, selectedStatus.Value, resolveUserId);
+                    provider.UpdateTicketStatus(troubleTicket.Id, selectedStatus.Value, resolveUserId);
                 }
             }
         }

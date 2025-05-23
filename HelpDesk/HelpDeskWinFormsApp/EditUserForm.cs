@@ -9,9 +9,9 @@ namespace HelpDeskWinFormsApp
     {
         int userId;
         User user;
-        private readonly IProvider provider;
+        private readonly IHelpDeskService provider;
 
-        public EditUserForm(int userId, IProvider provider)
+        public EditUserForm(int userId, IHelpDeskService provider)
         {
             InitializeComponent();
             this.userId = userId;
@@ -20,7 +20,7 @@ namespace HelpDeskWinFormsApp
 
         private void EditUserForm_Shown(object sender, EventArgs e)
         {
-            user = provider.GetUser(userId);
+            user = provider.GetUserById(userId);
 
             if (user.IsEmployee)
             {

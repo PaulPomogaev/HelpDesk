@@ -49,7 +49,7 @@ namespace HelpDesk.Common
             return true;
         }
 
-        public static bool IsLoginUnique(IProvider provider, string login)
+        public static bool IsLoginUnique(IHelpDeskService provider, string login)
         {
             var users = provider.GetAllUsers();
             foreach (var user in users)

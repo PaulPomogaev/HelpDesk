@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace HelpDesk.Common
 {
-    public class JsonStorage : IProvider
+    public class JsonStorage : IHelpDeskService
     {
         private string usersFileName = "users.json";
         private string troubleTicketsFileName = "troubleTicket.json";
 
-        public bool IsCorrectLoginPassword(string login, string password)
+        public bool ValidateCredentials(string login, string password)
         {
             var users = JsonProvider.Deserialize<User>(usersFileName);
             User user = null;
@@ -32,7 +32,7 @@ namespace HelpDesk.Common
             return user?.Password == Methods.GetHashMD5(password); // заменил return user.Password != Methods.GetHashMD5(password), при !=  пароль никогда не будет хешу 
         }
 
-        public User GetUser(string login)
+        public User GetUserByLogin(string login)
         {
             var users = JsonProvider.Deserialize<User>(usersFileName);
             User user = null;
@@ -54,7 +54,7 @@ namespace HelpDesk.Common
             return user;
         }
 
-        public User GetUser(int id)
+        public User GetUserById(int id)
         {
             var users = JsonProvider.Deserialize<User>(usersFileName);
             User user = null;
@@ -100,7 +100,7 @@ namespace HelpDesk.Common
             return JsonProvider.Deserialize<User>(usersFileName);
         }
 
-        public void AddTrubleTicket(TroubleTicket troubleTicket)
+        public void AddTicket(TroubleTicket troubleTicket)
         {
             var troubleTickets = JsonProvider.Deserialize<TroubleTicket>(troubleTicketsFileName);
 
@@ -118,7 +118,7 @@ namespace HelpDesk.Common
             JsonProvider.Serialize(troubleTickets, troubleTicketsFileName);
         }
 
-        public List<TroubleTicket> GetAllTroubleTickets()
+        public List<TroubleTicket> GetAllTickets()
         {
             var trubleTickets = JsonProvider.Deserialize<TroubleTicket>(troubleTicketsFileName);
 
@@ -132,7 +132,7 @@ namespace HelpDesk.Common
             }
         }
 
-        public TroubleTicket GetTroubleTicket(int id)
+        public TroubleTicket GetTicketById(int id)
         {
             var trubleTickets = JsonProvider.Deserialize<TroubleTicket>(troubleTicketsFileName);
 
@@ -148,10 +148,10 @@ namespace HelpDesk.Common
             }
         }
 
-        public void ResolveTroubleTicket(int id, TicketStatus status, string resolve, int resolveUserId)
+        public void ResolveTicket(int id, TicketStatus status, string resolve, int resolveUserId)
         {
-            var trubleTickets = GetAllTroubleTickets();
-            var trubleTicket = GetTroubleTicket(id);
+            var trubleTickets = GetAllTickets();
+            var trubleTicket = GetTicketById(id);
 
             trubleTickets.RemoveAll(x => x.Id == id);
 
@@ -168,10 +168,10 @@ namespace HelpDesk.Common
             JsonProvider.Serialize(sortedTrubleTickets, troubleTicketsFileName);
         }
 
-        public void ChangeStatusTroubleTicket(int id, TicketStatus status, int resolveUserId)
+        public void UpdateTicketStatus(int id, TicketStatus status, int resolveUserId)
         {
-            var trubleTickets = GetAllTroubleTickets();
-            var trubleTicket = GetTroubleTicket(id);
+            var trubleTickets = GetAllTickets();
+            var trubleTicket = GetTicketById(id);
 
             trubleTickets.RemoveAll(x => x.Id == id);
 
