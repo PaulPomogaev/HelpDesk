@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace HelpDesk.Common
 {
-    public class JsonStorage : IHelpDeskService
+    public class JsonStorage : IUserService, ITicketService
     {
         private string usersFileName = "users.json";
         private string troubleTicketsFileName = "troubleTicket.json";
@@ -97,10 +99,19 @@ namespace HelpDesk.Common
 
         public List<User> GetAllUsers()
         {
-            return JsonProvider.Deserialize<User>(usersFileName);
+            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, usersFileName);
+
+            if (!File.Exists(fullPath))
+            {
+                File.WriteAllText(fullPath, "[]"); 
+                return new List<User>();
+            }
+
+            var text = File.ReadAllText(fullPath);
+            return JsonConvert.DeserializeObject<List<User>>(text) ?? new List<User>();
         }
 
-        public void AddTicket(TroubleTicket troubleTicket)
+        public void CreateTicket(TroubleTicket troubleTicket)
         {
             var troubleTickets = JsonProvider.Deserialize<TroubleTicket>(troubleTicketsFileName);
 
@@ -120,16 +131,14 @@ namespace HelpDesk.Common
 
         public List<TroubleTicket> GetAllTickets()
         {
-            var trubleTickets = JsonProvider.Deserialize<TroubleTicket>(troubleTicketsFileName);
-
-            if (trubleTickets == null)
+            if (!FileProvider.Exists(troubleTicketsFileName))
             {
+                FileProvider.WriteTextIntoFile(troubleTicketsFileName, "[]");
                 return new List<TroubleTicket>();
             }
-            else
-            {
-                return trubleTickets;   // удалил дубль JsonProvider.Deserialize<TroubleTicket>(troubleTicketsFileName);
-            }
+
+            var tickets = JsonProvider.Deserialize<TroubleTicket>(troubleTicketsFileName);
+            return tickets ?? new List<TroubleTicket>();
         }
 
         public TroubleTicket GetTicketById(int id)

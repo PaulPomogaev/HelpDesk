@@ -9,18 +9,18 @@ namespace HelpDeskWinFormsApp
     {
         int userId;
         User user;
-        private readonly IHelpDeskService provider;
+        private readonly IUserService userService;
 
-        public EditUserForm(int userId, IHelpDeskService provider)
+        public EditUserForm(int userId, IUserService userService)
         {
             InitializeComponent();
             this.userId = userId;
-            this.provider = provider;
+            this.userService = userService;
         }
 
         private void EditUserForm_Shown(object sender, EventArgs e)
         {
-            user = provider.GetUserById(userId);
+            user = userService.GetUserById(userId);
 
             if (user.IsEmployee)
             {
@@ -121,15 +121,15 @@ namespace HelpDeskWinFormsApp
 
             if (userTypeComboBox.Text == "Сотрудник" && !user.IsEmployee)
             {
-                provider.ChangeUserToEmployee(user, functionComboBox.Text, deparmentComboBox.Text);
+                userService.ChangeUserToEmployee(user, functionComboBox.Text, deparmentComboBox.Text);
             }
             else if (userTypeComboBox.Text == "Клиент" && user.IsEmployee)
             {
-                provider.ChangeEmployeeToUser(user);
+                userService.ChangeEmployeeToUser(user);
             }
             else
             {
-                provider.UpdateUser(user);
+                userService.UpdateUser(user);
             }
         }
 

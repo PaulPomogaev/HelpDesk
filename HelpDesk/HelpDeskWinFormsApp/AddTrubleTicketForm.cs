@@ -8,13 +8,13 @@ namespace HelpDeskWinFormsApp
     public partial class AddTroubleTicketForm : Form
     {
         User user;
-        private readonly IHelpDeskService provider;
+        private readonly ITicketService ticketService;
 
-        public AddTroubleTicketForm(User user, IHelpDeskService provider)
+        public AddTroubleTicketForm(User user, ITicketService ticketService)
         {
             InitializeComponent();
 
-            this.provider = provider;
+            this.ticketService = ticketService;
             this.user = user;
         }
 
@@ -36,7 +36,7 @@ namespace HelpDeskWinFormsApp
                     Deadline = DateTime.Now.AddDays(4)
                 };
 
-                provider.AddTicket(trubelTicket);
+                ticketService.CreateTicket(trubelTicket);
             }
         }
 

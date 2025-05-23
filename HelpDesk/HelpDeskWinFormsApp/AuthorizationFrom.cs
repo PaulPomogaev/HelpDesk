@@ -8,12 +8,12 @@ namespace HelpDeskWinFormsApp
     public partial class AuthorizationFrom : Form
     {
         public bool RegistrationChoice = false;
-        private readonly IHelpDeskService provider;
+        private readonly IUserService userService;
 
-        public AuthorizationFrom(IHelpDeskService provider)
+        public AuthorizationFrom(IUserService userService)
         {
             InitializeComponent();
-            this.provider = provider;
+            this.userService = userService;
         }
 
         private void AuthorizationForm_Shown(object sender, EventArgs e) 
@@ -39,7 +39,7 @@ namespace HelpDeskWinFormsApp
                 return;
             }
 
-            if (!provider.ValidateCredentials(login, password))
+            if (!userService.ValidateCredentials(login, password))
             {
                 e.Cancel = true;
                 MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -62,22 +62,34 @@ namespace HelpDeskWinFormsApp
 
         private void AddFirstEmployee()
         {
-            var isEmptyUsers = provider.GetAllUsers();
-
-            if (isEmptyUsers == null || isEmptyUsers.Count == 0)
+            try
             {
-                var employee = new User
+                if (userService == null)
                 {
-                    Name = "startAdmin",
-                    Login = "admin",
-                    Password = Methods.GetHashMD5("admin"),
-                    Email = "admin@admin.admin",
-                    IsEmployee = true,
-                    Department = "Разработка",
-                    Function = "Разработчик"
-                };
+                    MessageBox.Show("Ошибка: Сервис пользователей не инициализирован");
+                    return;
+                }
 
-                provider.AddUser(employee);
+                var users = userService.GetAllUsers();
+                if (users.Count == 0) 
+                {
+                    var employee = new User
+                    {
+                        Name = "startAdmin",
+                        Login = "admin",
+                        Password = Methods.GetHashMD5("admin"),
+                        Email = "admin@admin.admin",
+                        IsEmployee = true,
+                        Department = "Разработка",
+                        Function = "Разработчик"
+                    };
+
+                    userService.AddUser(employee);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при создании администратора: {ex.Message}");
             }
         }
 

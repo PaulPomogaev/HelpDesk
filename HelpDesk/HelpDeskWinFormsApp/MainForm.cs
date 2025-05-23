@@ -13,18 +13,15 @@ namespace HelpDeskWinFormsApp
     public partial class MainForm : Form
     {
         private User user = new();
-        private IHelpDeskService provider;
+        private readonly ITicketService ticketService;
+        private readonly IUserService userService;
 
-        public MainForm(ApplicationDIController controller)
+        public MainForm(ApplicationDIController controller, ITicketService ticketService, IUserService userService)
         {
             controller.Start();
             InitializeComponent();
-            GetProvider();
-        }
-
-        public void GetProvider()
-        {
-            SystemManager.Get(out provider);
+            this.userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            this.ticketService = ticketService ?? throw new ArgumentNullException(nameof(ticketService));
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -33,7 +30,7 @@ namespace HelpDeskWinFormsApp
 
             if (login != string.Empty)
             {
-                user = provider.GetUserByLogin(login);
+                user = userService.GetUserByLogin(login);
 
                 ShowUserTreeNode();
                 SetHeaderWindowText();
@@ -78,7 +75,7 @@ namespace HelpDeskWinFormsApp
 
             if (login != string.Empty)
             {
-                user = provider.GetUserByLogin(login);
+                user = userService.GetUserByLogin(login);
 
                 SetHeaderWindowText();
 
@@ -114,14 +111,14 @@ namespace HelpDeskWinFormsApp
             {
                 var ticketId = Convert.ToInt32(listTTDataGridView.SelectedCells[0].Value);
 
-                var resolvedUser = Convert.ToInt32(provider.GetTicketById(ticketId).ResolveUser != null ? user.Id : -1);
+                var resolvedUser = Convert.ToInt32(ticketService.GetTicketById(ticketId).ResolveUser != null ? user.Id : -1);
 
                 if (user.IsEmployee && resolvedUser == -1)
                 {
                     resolvedUser = user.Id;
                 }
 
-                var dialogResult = new TroubleTicketForm(ticketId, user.IsEmployee, resolvedUser, provider).ShowDialog();
+                var dialogResult = new TroubleTicketForm(ticketId, user.IsEmployee, resolvedUser, ticketService, userService).ShowDialog();
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -132,7 +129,7 @@ namespace HelpDeskWinFormsApp
 
         private void AddTroubleTicketbutton_Click(object sender, EventArgs e)
         {
-            var dialogResult = new AddTroubleTicketForm(user, provider);
+            var dialogResult = new AddTroubleTicketForm(user, ticketService);
 
             if (dialogResult.ShowDialog() == DialogResult.OK)
             {
@@ -171,7 +168,7 @@ namespace HelpDeskWinFormsApp
                 isSupport = user.Department == "Техническая поддержка";
             }
 
-            new ExportForm(isSupport, provider).ShowDialog();
+            new ExportForm(isSupport, ticketService, userService).ShowDialog();
         }
 
         private void EditUserButton_Click(object sender, EventArgs e)
@@ -180,7 +177,7 @@ namespace HelpDeskWinFormsApp
             {
                 var userId = Convert.ToInt32(listTTDataGridView.SelectedCells[0].Value);
 
-                var dialogResult = new EditUserForm(userId, provider).ShowDialog();
+                var dialogResult = new EditUserForm(userId, userService).ShowDialog();
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -271,7 +268,7 @@ namespace HelpDeskWinFormsApp
         {
             var isNeedRegistration = false;
             var login = string.Empty;
-            var authorizationFrom = new AuthorizationFrom(provider);
+            var authorizationFrom = new AuthorizationFrom(userService);
 
             if (authorizationFrom.ShowDialog() == DialogResult.OK)
             {
@@ -290,7 +287,7 @@ namespace HelpDeskWinFormsApp
 
             if (isNeedRegistration)
             {
-                var registrationForm = new RegistrationForm(provider);
+                var registrationForm = new RegistrationForm(userService);
                 var registrationFormDialogResult = registrationForm.ShowDialog();
 
                 if (registrationFormDialogResult == DialogResult.OK)
@@ -319,13 +316,13 @@ namespace HelpDeskWinFormsApp
             switch (selectedNode)
             {
                 case "allUsersNode":
-                    FillUsersDataGreedView(provider.GetAllUsers());
+                    FillUsersDataGreedView(userService.GetAllUsers());
                     break;
                 case "clientsNode":
-                    FillUsersDataGreedView(provider.GetAllUsers().Where(u => !u.IsEmployee).ToList());
+                    FillUsersDataGreedView(userService.GetAllUsers().Where(u => !u.IsEmployee).ToList());
                     break;
                 case "EmployeeNode":
-                    FillUsersDataGreedView(provider.GetAllUsers().Where(u => u.IsEmployee).ToList());
+                    FillUsersDataGreedView(userService.GetAllUsers().Where(u => u.IsEmployee).ToList());
                     break;
                 default:
                     break;
@@ -347,11 +344,11 @@ namespace HelpDeskWinFormsApp
 
             if (user.IsEmployee)
             {
-                trubleTickets = provider.GetAllTickets();
+                trubleTickets = ticketService.GetAllTickets();
             }
             else
             {
-                trubleTickets = provider.GetAllTickets().Where(t => t.CreateUser == user.Id).ToList();
+                trubleTickets = ticketService.GetAllTickets().Where(t => t.CreateUser == user.Id).ToList();
             }
 
             switch (selectedNode)
@@ -433,7 +430,7 @@ namespace HelpDeskWinFormsApp
             listTTDataGridView.Rows.Clear();
 
             var countRow = allTrubleTickets.Count;
-            var allUsers = provider.GetAllUsers();
+            var allUsers = userService.GetAllUsers();
 
             for (int i = 0; i < countRow; i++)
             {

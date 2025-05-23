@@ -6,13 +6,13 @@ namespace HelpDeskWinFormsApp
 {
     public partial class RegistrationForm : Form
     {
-        private readonly IHelpDeskService provider;
+        private readonly IUserService userService;
 
-        public RegistrationForm(IHelpDeskService provider)
+        public RegistrationForm(IUserService userService)
         {
             InitializeComponent();
 
-            this.provider = provider;
+            this.userService = userService;
         }
 
         private void RegistrationForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -63,7 +63,7 @@ namespace HelpDeskWinFormsApp
                 return;
             }
 
-            if (!Validator.IsLoginUnique(provider, login))
+            if (!Validator.IsLoginUnique(userService, login))
             {
                 e.Cancel = true;
                 MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -78,7 +78,7 @@ namespace HelpDeskWinFormsApp
                 Email = email
             };
 
-            provider.AddUser(user);
+            userService.AddUser(user);
         }
     }
 }

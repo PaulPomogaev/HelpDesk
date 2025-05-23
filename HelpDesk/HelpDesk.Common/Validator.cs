@@ -49,9 +49,9 @@ namespace HelpDesk.Common
             return true;
         }
 
-        public static bool IsLoginUnique(IHelpDeskService provider, string login)
+        public static bool IsLoginUnique(IUserService userService, string login)
         {
-            var users = provider.GetAllUsers();
+            var users = userService.GetAllUsers();
             foreach (var user in users)
             {
                 if (user.Login == login)

@@ -10,9 +10,10 @@ namespace HelpDesk.Common.Application
         }
 
         private void RegisterSystems()
-        {          
-            SystemManager.Register(this);            
-            SystemManager.Register<IHelpDeskService>(() => new JsonStorage());
+        {
+            var storage = new JsonStorage();
+            SystemManager.Register<ITicketService>(() => new JsonStorage());
+            SystemManager.Register<IUserService>(() => new JsonStorage());
         }
     }
 }

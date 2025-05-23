@@ -14,15 +14,15 @@ namespace HelpDesk.Common
             Converters = { new StringEnumConverter() }
         };
 
-        public static List<T>? Deserialize<T>(string fileName)
+        public static List<T> Deserialize<T>(string fileName)
         {
             if (!File.Exists(fileName))
             {
-                return default;
+                return new List<T>();
             }
 
             var text = File.ReadAllText(fileName);
-            return JsonConvert.DeserializeObject<List<T>>(text, settings);
+            return JsonConvert.DeserializeObject<List<T>>(text) ?? new List<T>();
         }
 
         public static void Serialize<T>(List<T> values, string fileName)

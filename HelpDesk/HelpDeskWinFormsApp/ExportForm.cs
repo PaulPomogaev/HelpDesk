@@ -16,13 +16,15 @@ namespace HelpDeskWinFormsApp
         private bool successfullyExport = false;
         private DialogResult exportFileDialogResult = DialogResult.Cancel;
         private bool isSupport = false;
-        private readonly IHelpDeskService provider;
+        private readonly ITicketService ticketService;
+        private readonly IUserService userService;
 
-        public ExportForm(bool isSupport, IHelpDeskService provider)
+        public ExportForm(bool isSupport, ITicketService ticketService, IUserService userService)
         {
             InitializeComponent();
 
-            this.provider = provider;  //this.provider = provider удалил лишнюю строку
+            this.ticketService = ticketService;
+            this.userService = userService;
             this.isSupport = isSupport;
 
         }
@@ -58,7 +60,7 @@ namespace HelpDeskWinFormsApp
                 return;
             }
 
-            var allTrubleTickets = provider.GetAllTickets();
+            var allTrubleTickets = ticketService.GetAllTickets();
             var trubleTickets = new List<TroubleTicket>();
 
             foreach (var tt in allTrubleTickets)
@@ -69,7 +71,7 @@ namespace HelpDeskWinFormsApp
                 }
             }
 
-            var users = provider.GetAllUsers();
+            var users = userService.GetAllUsers();
             var exportFile = exportFileDialog.FileName;
 
             if (typeComboBox.Text == "Truble Ticket")

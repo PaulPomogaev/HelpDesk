@@ -14,21 +14,23 @@ namespace HelpDeskWinFormsApp
         bool isEmployee;
         int resolveUserId;
         TicketStatus lastStatus;
-        private readonly IHelpDeskService provider;
+        private readonly ITicketService ticketService;
+        private readonly IUserService userService;
 
-        public TroubleTicketForm(int ticketId, bool isEmployee, int resolveUserId, IHelpDeskService provider)
+        public TroubleTicketForm(int ticketId, bool isEmployee, int resolveUserId, ITicketService ticketService, IUserService userService)
         {
             InitializeComponent();
             this.ticketId = ticketId;
             this.isEmployee = isEmployee;
             this.resolveUserId = resolveUserId;
-            this.provider = provider;
+            this.ticketService = ticketService;
+            this.userService = userService;
         }
 
         private void TrubleTicketForm_Shown(object sender, System.EventArgs e)
         {
-            troubleTicket = provider.GetTicketById(ticketId);
-            userCreate = provider.GetUserById(troubleTicket.CreateUser);
+            troubleTicket = ticketService.GetTicketById(ticketId);
+            userCreate = userService.GetUserById(troubleTicket.CreateUser);
             lastStatus = troubleTicket.Status;
             statusTrubleTicketComboBox.DataSource = Enum.GetValues<TicketStatus>().Select(s => s.GetDescription()).ToList();
             statusTrubleTicketComboBox.SelectedItem = troubleTicket.Status;
@@ -99,11 +101,11 @@ namespace HelpDeskWinFormsApp
 
                 if (selectedStatus == TicketStatus.Выполнена || selectedStatus == TicketStatus.Отклонена)
                 {
-                    provider.ResolveTicket(troubleTicket.Id, selectedStatus.Value, resolveRichTextBox.Text, resolveUserId);
+                    ticketService.ResolveTicket(troubleTicket.Id, selectedStatus.Value, resolveRichTextBox.Text, resolveUserId);
                 }
                 else if (selectedStatus != lastStatus)
                 {
-                    provider.UpdateTicketStatus(troubleTicket.Id, selectedStatus.Value, resolveUserId);
+                    ticketService.UpdateTicketStatus(troubleTicket.Id, selectedStatus.Value, resolveUserId);
                 }
             }
         }
