@@ -6,11 +6,7 @@ namespace HelpDesk.Common
     {
         public static bool IsPasswordValid (string password)
         {
-            if (password.Length < 6)
-            {
-                return false;
-            }
-            return true;
+            return password.Length >= 6;
         }
 
         public static bool IsEmailValid(string email)
